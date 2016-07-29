@@ -136,12 +136,16 @@ class VCRConnection(object):
 
     def _uri(self, url):
         """Returns request absolute URI"""
-        uri = "{0}://{1}{2}{3}".format(
-            self._protocol,
-            self.real_connection.host,
-            self._port_postfix(),
-            url,
-        )
+        parsed_url = six.moves.urllib.parse.urlparse(url)
+        if parsed_url.netloc:
+            uri = url
+        else:
+            uri = "{0}://{1}{2}{3}".format(
+                self._protocol,
+                self.real_connection.host,
+                self._port_postfix(),
+                url,
+            )
         return uri
 
     def _url(self, uri):
